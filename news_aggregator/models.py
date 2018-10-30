@@ -39,6 +39,7 @@ class News(models.Model):
     resource = models.ManyToManyField(Resource)
 
     class Meta:
+        ordering = ['-date']
         verbose_name_plural = 'news'
 
     def __str__(self):
