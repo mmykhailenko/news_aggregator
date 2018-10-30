@@ -22,7 +22,7 @@ class Tag(models.Model):
 
 class Resource(models.Model):
 
-    resource_url = models.CharField(max_length=100, primary_key=True)
+    resource_url = models.URLField(primary_key=True)
     location = models.CharField(max_length=50)
 
     def __str__(self):
