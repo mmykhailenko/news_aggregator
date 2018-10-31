@@ -22,11 +22,11 @@ class Tag(models.Model):
 
 class Resource(models.Model):
 
-    resource_url = models.URLField(primary_key=True)
-    location = models.CharField(max_length=50)
+    url = models.URLField(primary_key=True)
+    country = models.CharField(max_length=50)
 
     def __str__(self):
-        return "{}, {}".format(self.resource_url, self.location)
+        return "{}, {}".format(self.url, self.country)
 
 
 class News(models.Model):
