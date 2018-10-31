@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>News</title>
+</head>
+<body>
+{% block content %}
+    <h2>News</h2>
+    <ul>
+        {% for news in object_list %}
+            <li>{{ news.title }}</li>
+            <li>{{ news.date }}</li>
+            <li>{{ news.category }}</li>
+            <li></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+</body>
+</html>

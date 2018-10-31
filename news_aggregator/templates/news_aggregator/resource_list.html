@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resource</title>
+</head>
+<body>
+{% block content %}
+    <h2>Resource</h2>
+    <ul>
+        {% for resource in object_list %}
+            <li>{{ resource.resource_url }}</li>
+            <li>{{ resource.country }}</li>
+            <li></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+</body>
+</html>
