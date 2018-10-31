@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if categories %}
+    {% for c in categories %}
+        <p>{{ c.name }}</p>
+        <hr>
+    {% endfor %}
+
+{% else %}
+    <p>No categories.</p>
+{% endif %}
+{% endblock %}
