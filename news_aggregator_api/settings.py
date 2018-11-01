@@ -76,16 +76,14 @@ WSGI_APPLICATION = 'news_aggregator_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'news_db',
         'USER': 'test',
         'PASSWORD': 'test',
-        'HOST': 'dbPostgres',
-        'PORT': '5432',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
