@@ -3,13 +3,8 @@ version: "3"
 services:
   dbPostgres:
     image: postgres:10
-    restart: always
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_DB: news_aggr_db
-      POSTGRES_PASSWORD: test
-      POSTGRES_USER: test
 
   adminer:
       image: adminer
