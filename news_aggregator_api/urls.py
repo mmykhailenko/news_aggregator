@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from news_aggregator import urls as news_aggregator_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('news/', include(news_aggregator_urls)),
+    path('news/', include('news_aggregator.urls')),
 ]
