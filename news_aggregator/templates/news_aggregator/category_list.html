@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Category</title>
-</head>
-<body>
+{% extends "news_aggregator/base.html" %}
+
+{% block title %}
+    Category
+{% endblock title %}
+
 {% block content %}
     <h2>Category</h2>
     <ul>
-        {% for cat in object_list %}
+        {% for cat in category_list %}
             <li>{{ cat }}</li>
+        {% empty %}
+            <li> No categories present</li>
         {% endfor %}
     </ul>
-{% endblock %}
-</body>
-</html>
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends "news_aggregator/base.html" %}
+
+{% block title %}
+    {{ news.title }}
+{% endblock title %}
+
+{% block content %}
+
+    <h2>{{ news.title }}</h2>
+    <p>{{ news.date }}</p>
+    <p>{{ news.content }}</p>
+    <p>Category: {{ news.category }}</p>
+    <p> Related tags:</p>
+    {% for tag in news.tag.all %}
+        <li>{{tag.name}}</li>
+    {% empty %}
+        <li>This article haven't related tags</li>
+    {% endfor %}
+    <p> Sources:</p>
+    {% for res in news.resource.all %}
+        <li><a href="{{res.resource_url}}">{{res.resource_url}}</a></li>
+        <li>{{ res.country }}</li>
+        <p></p>
+    {% empty %}
+        <li>Source not specified</li>
+    {% endfor %}
+
+{% endblock %}

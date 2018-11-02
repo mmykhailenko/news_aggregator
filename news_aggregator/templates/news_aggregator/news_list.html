@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>News</title>
-</head>
-<body>
+{% extends "news_aggregator/base.html" %}
+
+{% block title %}
+    News
+{% endblock title %}
+
 {% block content %}
     <h2>News</h2>
-    <ul>
-        {% for news in object_list %}
-            <li>{{ news.title }}</li>
+        {% for news in news_list %}
+            <a href="{{ news.id }}"><h4>{{ news.title }}</h4></a>
             <li>{{ news.date }}</li>
-            <li>{{ news.category }}</li>
-            <li></li>
+            <p></p>
+
+        {% empty %}
+            <li> There's no news right now</li>
         {% endfor %}
-    </ul>
 {% endblock %}
-</body>
-</html>

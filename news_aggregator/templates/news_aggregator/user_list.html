@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Users</title>
-</head>
-<body>
+{% extends "news_aggregator/base.html" %}
+
+{% block title %}
+    Category
+{% endblock title %}
+
 {% block content %}
     <h2>Users</h2>
-    <ul>
-        {% for user in object_list %}
-            <li>{{ user.first_name }}</li>
-            <li>{{ user.last_name }}</li>
-            <li>{{ user.email }}</li>
-            <li></li>
-        {% endfor %}
-    </ul>
+    {% for user in user_list %}
+        <li>{{ user.first_name }}</li>
+        <li>{{ user.last_name }}</li>
+        <li>{{ user.email }}</li>
+        <p></p>
+    {% empty %}
+        <li> Any user registered :( </li>
+    {% endfor %}
+
 {% endblock %}
-</body>
-</html>

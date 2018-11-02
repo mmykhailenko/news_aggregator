@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Resource</title>
-</head>
-<body>
+{% extends "news_aggregator/base.html" %}
+
+{% block title %}
+    Category
+{% endblock title %}
+
 {% block content %}
     <h2>Resource</h2>
-    <ul>
-        {% for resource in object_list %}
-            <li>{{ resource.resource_url }}</li>
-            <li>{{ resource.country }}</li>
-            <li></li>
+        {% for res in resource_list %}
+            <li><a href="{{ res.resource_url }}"> {{ res.resource_url }}</a></li>
+            <li> Country: {{ resource.country }}</li>
+            <p></p>
+        {% empty %}
+            <li> Haven't added yet</li>
         {% endfor %}
-    </ul>
 {% endblock %}
-</body>
-</html>
