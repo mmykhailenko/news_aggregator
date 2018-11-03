@@ -112,4 +112,4 @@ venv.bak/
 .DS_Store
 
 # Docker
-docker_compose.yml
+docker-compose.yml
