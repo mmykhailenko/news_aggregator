@@ -1,9 +1,13 @@
 import requests
 import time
 import schedule
-from news_aggregator.models import News, Category
+from django.utils import timezone
+
+from news_aggregator.models import Category, News
+
 
 class NewsWorker:
+
     def __init__(self, country, category, lang):
         self.country = country
         self.category = Category.objects.get_or_create(name=category)
@@ -13,21 +17,15 @@ class NewsWorker:
         self.data = dict()
 
     def get_news(self):
-        print(f"Get news {timezone.now()}")
+
         with requests.Session() as session:
             response = session.get(self.url_base).json()
-            self.serialize_news(response['articles'])
+            self._serialize_news(response['articles'])
+            print(f"Get news {timezone.now()}: {response}")
 
-    def serialize_news(self, raw_news):
+    def _serialize_news(self, raw_news):
         for n in raw_news:
+            print(f"===\n\t{n['title']}\n===")
             News.objects.get_or_create(title=n['title'], date=n['publishedAt'], content=n['description'], category=self.category[0])
 
-w1 = NewsWorker("Ukraine", "sports", "en")
 
-# Schedule data update every X seconds
-schedule.every(30).minutes.do(w1.get_news())
-
-# Main loop
-while 1:
-    schedule.run_pending()
-    time.sleep(30)

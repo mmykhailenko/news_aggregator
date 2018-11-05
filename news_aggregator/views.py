@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpRequest as request
+from django.http import HttpRequest as request, HttpResponse
+from django.views import View
 
 from django.views.generic import ListView, DetailView
+
+from news_aggregator.news_worker import NewsWorker
 from .models import Tag, Category, Resource, News
 
 class TagListView(ListView):
@@ -44,3 +47,11 @@ class NewsDetailView(DetailView):
     model = News
     template_name = 'news_aggregator/news_single.html'
 
+
+class NewsCreator(View):
+
+    def get(self, request, *args, **kwargs):
+        news_worker = NewsWorker(country="Ukraine", category="business", lang="ru")
+        news_worker.get_news()
+
+        return HttpResponse("DONE")
