@@ -1,4 +1,6 @@
 import requests
+import time
+import schedule
 from news_aggregator.models import News, Category
 
 class NewsWorker:
@@ -11,7 +13,7 @@ class NewsWorker:
         self.data = dict()
 
     def get_news(self):
-        """Gets value from URL during session and calls save_stat()"""
+        print(f"Get news {timezone.now()}")
         with requests.Session() as session:
             response = session.get(self.url_base).json()
             self.serialize_news(response['articles'])
@@ -19,3 +21,13 @@ class NewsWorker:
     def serialize_news(self, raw_news):
         for n in raw_news:
             News.objects.get_or_create(title=n['title'], date=n['publishedAt'], content=n['description'], category=self.category[0])
+
+w1 = NewsWorker("Ukraine", "sports", "en")
+
+# Schedule data update every X seconds
+schedule.every(30).minutes.do(w1.get_news())
+
+# Main loop
+while 1:
+    schedule.run_pending()
+    time.sleep(30)
