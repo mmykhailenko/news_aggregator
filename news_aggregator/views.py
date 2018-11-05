@@ -51,7 +51,7 @@ class NewsDetailView(DetailView):
 class NewsCreator(View):
 
     def get(self, request, *args, **kwargs):
-        news_worker = NewsWorker(country="Ukraine", category="business", lang="ru")
+        news_worker = NewsWorker(country="USA", category="sports", lang="en")
         news_worker.get_news()
 
         return HttpResponse("DONE")
