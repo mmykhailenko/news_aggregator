@@ -45,7 +45,11 @@ class NewsWorker:
             n_source = Resource.objects.get_or_create(name=n['source']['name'],
                                                       country=self.country,
                                                       resource_url='{uri.scheme}://{uri.netloc}/'.format(uri=n_source_url))[0]
-            prep_news = News.objects.get_or_create(title=n['title'], date=n['publishedAt'], content=n['description'], category=self.category, res = n_source)[0]
+            prep_news = News.objects.get_or_create(title=n['title'],
+                                                   date=n['publishedAt'],
+                                                   content=n['description'],
+                                                   category=self.category,
+                                                   res = n_source)[0]
 
 
 
