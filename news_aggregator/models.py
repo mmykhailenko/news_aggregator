@@ -3,7 +3,7 @@ from django.db import models
 
 class Category(models.Model):
 
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(primary_key=True, max_length=30, unique=True)
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -12,21 +12,14 @@ class Category(models.Model):
         return self.name
 
 
-class Tag(models.Model):
-
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Resource(models.Model):
 
-    resource_url = models.URLField(primary_key=True)
+    name = models.CharField(max_length=200)
+    resource_url = models.URLField(primary_key=True, unique=True)
     country = models.CharField(max_length=50)
 
     def __str__(self):
-        return "{}, {}".format(self.resource_url, self.country)
+        return "{}, {}, {}".format(self.name, self.resource_url, self.country)
 
 
 class News(models.Model):
@@ -35,8 +28,7 @@ class News(models.Model):
     date = models.DateTimeField()
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    tag = models.ManyToManyField(Tag)
-    resource = models.ManyToManyField(Resource)
+    res = models.ForeignKey(Resource, on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ['-date']

@@ -5,15 +5,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 
 from news_aggregator.news_worker import NewsWorker
-from .models import Tag, Category, Resource, News
-
-class TagListView(ListView):
-    model = Tag
-    template_name = 'news_aggregator/tag_list.html'
-    context_object_name = 'tags'
-
-    def get_queryset(self):
-        return Tag.objects.all()
+from .models import Category, Resource, News
 
 
 class ResourceListView(ListView):
