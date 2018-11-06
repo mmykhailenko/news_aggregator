@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if tags %}
+    {% for t in tags %}
+        <p>{{ t.title }}</p>
+        <hr>
+    {% endfor %}
+
+{% else %}
+    <p>No tags.</p>
+{% endif %}
+{% endblock %}

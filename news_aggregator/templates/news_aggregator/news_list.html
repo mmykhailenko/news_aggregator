@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if news %}
+    {% for n in news %}
+        <p><h3>{{ n.title }}</h3></p>
+        <p>Publication date: {{ n.date }}</p>
+        <p>Source: {% if n.resource.id %}{{ n.resource }}{% else %}unknown{% endif %}</p>
+        <a href="{% url 'news_aggregator:news_single' n.id %}">Show more</a>
+        <hr>
+    {% endfor %}
+
+{% else %}
+    <p>No news is good news.</p>
+{% endif %}
+{% endblock %}

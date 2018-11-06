@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if resources %}
+    {% for r in resources %}
+        <p>{{ r.resource_url }}</p>
+        <p>Country: {{ r.country }}</p>
+        <hr>
+    {% endfor %}
+
+{% else %}
+    <p>No resources.</p>
+{% endif %}
+{% endblock %}
