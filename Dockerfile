@@ -10,4 +10,3 @@ ADD requirements.txt /opt/news_aggregator/
 ADD manage.py /opt/news_aggregator/
 
 RUN pip install -r requirements.txt
-CMD ["python", "manage.py", "runserver", "0:8000"]
