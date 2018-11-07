@@ -1,7 +1,7 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from .models import Tag, Category, Resource, News
+
 
 class TagListView(ListView):
     model = Tag
@@ -43,3 +43,17 @@ class NewsDetailView(DetailView):
     model = News
     template_name = 'news_aggregator/news_single.html'
 
+
+class NewsByCategoryListView(ListView):
+    model = News
+    template_name = 'news_aggregator/news_category_list.html'
+    context_object_name = 'news'
+
+    def get_queryset(self):
+        category = get_object_or_404(Category, name=self.kwargs.get('category_name'))
+        return News.objects.filter(category=category)
+
+
+def documentation_view(request):
+    if request.method == 'GET':
+        return render(request, 'news_aggregator/docs.html')

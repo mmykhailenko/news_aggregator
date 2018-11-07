@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}
+    <title>Resources</title>
+{% endblock title %}
 
-{% if resources %}
+{% block content %}
     {% for r in resources %}
         <p>{{ r.resource_url }}</p>
         <p>Country: {{ r.country }}</p>
         <hr>
+    {% empty%}
+        <p>No resources.</p>
     {% endfor %}
-
-{% else %}
-    <p>No resources.</p>
-{% endif %}
 {% endblock %}
