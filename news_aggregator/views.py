@@ -1,10 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpRequest as request, HttpResponse
+from django.http import HttpResponse
 from django.views import View
 
 from django.views.generic import ListView, DetailView
 
-from news_aggregator.news_worker import NewsWorker
+from news_aggregator.workers.NewsApiWorker import NewsApiWorker
 from .models import Category, Resource, News
 
 
@@ -43,7 +42,7 @@ class NewsDetailView(DetailView):
 class NewsCreator(View):
 
     def get(self, request, *args, **kwargs):
-        news_worker = NewsWorker(country="USA", category="sports", lang="en")
+        news_worker = NewsApiWorker(api_type="top-headlines", query="White House", country="us", category="politics", language="en", time_step=10)
         news_worker.get_news()
 
         return HttpResponse("DONE")
