@@ -28,7 +28,8 @@ class News(models.Model):
     date = models.DateTimeField()
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    res = models.ForeignKey(Resource, on_delete=models.PROTECT, null=True)
+    resource_url = models.ForeignKey(Resource, on_delete=models.PROTECT, null=True)
+    language = models.CharField(max_length=80)
 
     class Meta:
         ordering = ['-date']
