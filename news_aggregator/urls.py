@@ -6,7 +6,7 @@ urlpatterns = [
     path('news/', include([
         path('', views.NewsListView.as_view(), name='news_list'),
         path('<int:pk>/', views.NewsDetailView.as_view(), name='news_single'),
-        path('<str:model_field>=<str:value>',
+        path('category=<str:category_name>',
              views.NewsByCategoryListView.as_view(),
              name='news_category_list'),
     ])),
