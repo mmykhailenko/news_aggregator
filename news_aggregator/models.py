@@ -12,18 +12,10 @@ class Category(models.Model):
         return self.name
 
 
-class Tag(models.Model):
-
-    name = models.CharField(max_length=50, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Resource(models.Model):
 
     resource_url = models.URLField(primary_key=True)
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=2)
 
     def __str__(self):
         return "{}, {}".format(self.resource_url, self.country)
@@ -35,8 +27,8 @@ class News(models.Model):
     date = models.DateTimeField()
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    tag = models.ManyToManyField(Tag)
-    resource = models.ManyToManyField(Resource)
+    resource = models.ForeignKey(Resource, on_delete=models.PROTECT)
+    lang = models.CharField(max_length=2)
 
     class Meta:
         ordering = ['-date']
