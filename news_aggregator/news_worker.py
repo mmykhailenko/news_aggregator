@@ -9,24 +9,39 @@ from django.utils import timezone
 from .models import Category, News, Resource
 
 # TODO: make adapter and base worker class
-class NewsWorker:
+class BaseWorker:
+
+    def _auth(self):
+        raise NotImplementedError
+
+    def _url_construct(self):
+        raise NotImplementedError
+
+    def _validate_data(self):
+        raise NotImplementedError
+
+class NewsAPIWorker(BaseWorker):
 
     BASE_URL = "https://newsapi.org/"
     API_VERSION = "v2/"
     API_TYPE = "everything"
     API_KEY = "488c6cc7d5b04c3ea87b8d672152eeaf"
 
-    def __init__(self, country, category, lang):
-        self.base_url = NewsWorker.BASE_URL
-        self.country = country or "us"
-        self.category = Category.objects.get_or_create(name=category)[0]
+    def __init__(self, base_url=NewsAPIWorker.BASE_URL, api_version=NewsAPIWorker.API_VERSION, api_type=NewsAPIWorker.API_TYPE, api_key=NewsAPIWorker.API_KEY, country="USA", category, lang="en"):
+        self.base_url = base_url
+        self.api_version = api_version
+        self.api_type = api_type
+        self.api_key = api_key
+        self.country = country
+        self.category, _ = Category.objects.get_or_create(name=category)
         self.language = lang
         self.time_step = 10
-        self.url_base = self._url_create()
+        self.url = self._url_create()
         self.data = dict()
 
 
     def _url_create(self):
+        return f"{self.base_url}{self.api_version}{self.api_type}?apiKey={self.api_key}"
         postfix_url = f'pageSize=100&q={self.category}&language={self.language}'
         # url = urljoin(self.base_url, self.API_VERSION, self.API_TYPE, postfix_url)
         url = f"https://newsapi.org/v2/everything?apiKey=488c6cc7d5b04c3ea87b8d672152eeaf&{postfix_url}"
