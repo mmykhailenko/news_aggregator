@@ -1,6 +1,6 @@
-from urllib.parse import urlparse
-
 import requests
+from urllib.parse import urlparse
+from django.utils import timezone
 
 from news_aggregator.workers.BaseWorkerAbstract import BaseWorkerAbstract
 from news_aggregator.models import Category, News, Resource
@@ -52,17 +52,23 @@ class NewsApiWorker(BaseWorkerAbstract):
 
     def _serialize_source(self, news):
         news_source_url = urlparse(news['url'])
-        news_source, _ = Resource.objects.get_or_create(name=news['source']['name'],
-                                                        country=self.country,
-                                                        resource_url='{uri.scheme}://{uri.netloc}/'.format(uri=news_source_url))
+        source_name = news['source']['name'] or "{uri.netloc}".format(uri=news_source_url)
+        source_country = self.country or "Unknown"
+        source_url = "{uri.scheme}://{uri.netloc}/".format(uri=news_source_url)
+        news_source, _ = Resource.objects.get_or_create(name=source_name,
+                                                        country=source_country,
+                                                        resource_url=source_url)
         return news_source
 
     def _serialize_news(self, news, news_source):
-        News.objects.get_or_create(title=news['title'],
-                                   date=news['publishedAt'],
-                                   content=news['description'],
-                                   category=self.category,
+        news_title = news['title'] or news['description'][:140]
+        news_date = news['publishedAt'] or timezone.now()
+        news_content = news['description']
+        News.objects.get_or_create(title=news_title,
+                                   date=news_date,
+                                   content=news_content,
                                    resource=news_source,
+                                   category=self.category,
                                    lang=self.language)
 
 

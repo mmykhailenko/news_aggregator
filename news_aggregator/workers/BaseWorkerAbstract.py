@@ -8,3 +8,4 @@ class BaseWorkerAbstract:
 
     def _validate_data(self):
         raise NotImplementedError
+    
