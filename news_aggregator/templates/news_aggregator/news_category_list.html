@@ -1,5 +1,5 @@
 {% extends 'news_aggregator/news_list.html' %}
 
 {% block title %}
-    <title>{{ view.kwargs.category_name|title }}</title>
+    <title>{{ view.kwargs.model_field|title }} - {{ view.kwargs.value|title }}</title>
 {% endblock title %}

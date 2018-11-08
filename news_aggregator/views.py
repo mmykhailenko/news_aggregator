@@ -1,15 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .models import Tag, Category, Resource, News
-
-
-class TagListView(ListView):
-    model = Tag
-    template_name = 'news_aggregator/tag_list.html'
-    context_object_name = 'tags'
-
-    def get_queryset(self):
-        return Tag.objects.all()
+from .models import Category, Resource, News
 
 
 class ResourceListView(ListView):
