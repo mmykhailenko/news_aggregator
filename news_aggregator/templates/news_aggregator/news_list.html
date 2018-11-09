@@ -8,7 +8,13 @@
     {% for n in news %}
         <h3>{{ n.title }}</h3>
         <p>Publication date: {{ n.date }}</p>
-        <p>Source: {% if n.resource.id %}{{ n.resource }}{% else %}unknown{% endif %}</p>
+        <p>Source:
+            {% if n.resource %}
+                <a href="{{ n.resource.resource_url }}">{{ n.resource.resource_url }}</a>
+            {% else %}
+                unknown
+            {% endif %}
+        </p>
         <a href="{% url 'news_aggregator:news_single' n.id %}">Show more</a>
         <hr>
     {% empty %}
