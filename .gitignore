@@ -110,6 +110,3 @@ venv.bak/
 
 # OSx
 .DS_Store
-
-# Docker
-docker-compose.yml

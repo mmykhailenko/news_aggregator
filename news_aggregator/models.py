@@ -3,7 +3,7 @@ from django.db import models
 
 class Category(models.Model):
 
-    name = models.CharField(max_length=30, unique=True)
+    name = models.CharField(primary_key=True, max_length=30, unique=True)
 
     class Meta:
         verbose_name_plural = 'categories'
@@ -13,12 +13,12 @@ class Category(models.Model):
 
 
 class Resource(models.Model):
-
+    name = models.CharField(max_length=200)
     resource_url = models.URLField(primary_key=True)
     country = models.CharField(max_length=2)
 
     def __str__(self):
-        return "{}, {}".format(self.resource_url, self.country)
+        return "{}, {}, {}".format(self.name, self.resource_url, self.country)
 
 
 class News(models.Model):

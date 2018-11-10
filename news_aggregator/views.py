@@ -1,15 +1,10 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.views import View
 
 from django.views.generic import ListView, DetailView
-from .models import Tag, Category, Resource, News
 
-class TagListView(ListView):
-    model = Tag
-    template_name = 'news_aggregator/tag_list.html'
-    context_object_name = 'tags'
-
-    def get_queryset(self):
-        return Tag.objects.all()
+from news_aggregator.workers.NewsApiWorker import NewsApiWorker
+from .models import Category, Resource, News
 
 
 class ResourceListView(ListView):
@@ -43,3 +38,11 @@ class NewsDetailView(DetailView):
     model = News
     template_name = 'news_aggregator/news_single.html'
 
+
+class NewsCreator(View):
+
+    def get(self, request, *args, **kwargs):
+        news_worker = NewsApiWorker(api_type="top-headlines", query="White House", country="us", category="politics", language="en", time_step=10)
+        news_worker.get_news()
+
+        return HttpResponse("DONE")
