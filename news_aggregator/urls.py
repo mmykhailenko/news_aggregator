@@ -12,4 +12,5 @@ urlpatterns = [
     ])),
     path('resource/', views.ResourceListView.as_view(), name='resource_list'),
     path('docs/', views.documentation_view, name='docs'),
+    path('worker/', views.NewsCreator.as_view(), name='news_creator'),
 ]
