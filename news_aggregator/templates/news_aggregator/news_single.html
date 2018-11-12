@@ -1,7 +1,19 @@
 {% extends 'base.html' %}
 
+{% block title %}
+    <title>{{ news.title }}</title>
+{% endblock title %}
+
 {% block content %}
-
-    <h1>{{ news.title }}</h1>
-
+    <p>Publication date: {{ news.date }}</p>
+    <hr>
+    <p>{{ news.content }} </p>
+    <hr>
+    <p>Source:
+        {% if news.resource.id %}
+            {{ news.resource }}
+        {% else %}
+            Unknown
+        {% endif %}
+    </p>
 {% endblock %}
