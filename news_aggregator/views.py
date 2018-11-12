@@ -87,11 +87,10 @@ class NewsQueries:
 
 class NewsByFilterListView(NewsQueries, View):
 
-    def _bad_request(self, bad_value, url_parameter):
+    def _bad_request(self, bad_value, url_parameter, status_code):
         """ Returns appropriate response if requested parameters is invalid"""
         resp = {
-            'status_code': 400,
-            'status_name': 'Bad Request',
+            'status_code': status_code,
             'reason': f'"{bad_value}" - is not valid {url_parameter} to this request!',
         }
         return JsonResponse(resp)
@@ -121,12 +120,12 @@ class NewsByFilterListView(NewsQueries, View):
         }
 
         if request_type not in FILTER_MAP:
-            return self._bad_request(request_type, 'request type')
+            return self._bad_request(request_type, 'request type', 400)
 
         query, value, status_code = FILTER_MAP[request_type](value)
 
         if status_code != 200:
-            return self._bad_request(value, 'value')
+            return self._bad_request(value, 'value', status_code)
 
         context = {'news': News.objects.filter(**{query: value})}
         return render(request, 'news_aggregator/news_filter_list.html', context=context)
