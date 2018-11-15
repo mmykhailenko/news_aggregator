@@ -7,7 +7,7 @@ from .worker_settings import (
     log_worker,
     NEWS_API_URL,
     QUERY_PARAMS,
-    CATEGORIES,
+    ITERABLE_QUERY_PARAM,
     WORKER_REST_TIME
 )
 from news_aggregator.models import Category, News, Resource
@@ -21,13 +21,13 @@ class NewsAPICollector:
         query_params.update({'category': category})
         # disable ssl validation by creating custom Connector instance
         connector = aiohttp.TCPConnector(verify_ssl=False)
-        log_worker.debug(f'Async request for "{category}" sent')
         try:
+            log_worker.debug(f'Async request for "{category}" sending...')
             async with aiohttp.request('GET', NEWS_API_URL, params=query_params, connector=connector) as resp:
                 log_worker.info(f'Request status:{resp.status} received for "{category}" category')
                 data = await resp.json()
                 if resp.status == 200:
-                    # Add 'category' mark and put collected data in 'raw_news' for further processing
+                    # Add 'category' mark and put collected data in 'self.raw_news' for further processing
                     collected = {category: data['articles']}
                     self.raw_news.append(collected)
                 else:
@@ -42,7 +42,7 @@ class NewsAPICollector:
         while True:
             log_worker.info('Create tasks...\n')
             # Make tasks for every category
-            tasks = [asyncio.ensure_future(self._collect_news(category, **QUERY_PARAMS)) for category in CATEGORIES]
+            tasks = [asyncio.ensure_future(self._collect_news(category, **QUERY_PARAMS)) for category in ITERABLE_QUERY_PARAM]
             # Run 'self._collect_news' for every CATEGORIES and waits until their finish
             await asyncio.wait(tasks)
             log_worker.info('Raw news collected...\n')
@@ -57,7 +57,7 @@ class NewsAPICollector:
         while self.raw_news:
             raw = self.raw_news.pop()
             category, news = raw.popitem()
-            log_worker.debug(f'Processing: {category}...')
+            log_worker.debug(f'Processing: "{category}"...')
             news_category = self._serialize_category(category)
             for article in news:
                 title, content, source_url, source_name, pub_date = self._extract_required_fields(article)
@@ -65,7 +65,7 @@ class NewsAPICollector:
                     continue
                 news_source = self._serialize_source(source_url, source_name)
                 self._serialize_news(title, content, news_category, news_source, pub_date)
-            log_worker.debug(f'Processing finished for: {category}...\n')
+            log_worker.debug(f'Processing finished for: "{category}"...\n')
         log_worker.debug('All articles handled.\n')
 
     def _extract_required_fields(self, article):

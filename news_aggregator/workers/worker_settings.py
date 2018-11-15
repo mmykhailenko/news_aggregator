@@ -10,7 +10,7 @@ API_REQUEST_TYPE = 'top-headlines/'
 NEWS_API_URL = f'{BASE_URL}{API_VERSION}{API_REQUEST_TYPE}'
 
 # Only this categories provided by news api.
-CATEGORIES = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
+ITERABLE_QUERY_PARAM = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
 
 QUERY_PARAMS = {
     'language': 'en',
