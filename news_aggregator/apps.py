@@ -16,6 +16,6 @@ class NewsAggregatorConfig(AppConfig):
         else:
             if not self.is_worker_running:
                 self.is_worker_running = True
-                from .workers.worker import NewsAPICollector
+                from .workers.worker import NewsAPIWorker
 
-                NewsAPICollector().run()
+                NewsAPIWorker('News_API_Worker').run()
