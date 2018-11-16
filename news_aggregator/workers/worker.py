@@ -24,7 +24,7 @@ class NewsAPIWorker(BaseAPICollector):
         'page_size': 20,
     }
 
-    WORKER_REST_TIME = 60*5
+    WORKER_REST_TIME = 5
 
     LOGGER_CONFIGS = {
         'filename': 'worker_logs.txt',

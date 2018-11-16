@@ -7,7 +7,7 @@ class APICollectorErrors(Exception):
     pass
 
 
-class NothingToRequestError(APICollectorErrors):
+class NotOverwrittenError(APICollectorErrors):
     pass
 
 
@@ -21,6 +21,7 @@ class BaseAPICollector:
          should create container instance on class or object level and override 'put' method.
          - Subclasses can safely get access to collected data when overriding 'process_data' method.
          - Subclasses should call method 'run' to work
+         - When overriding '__init__' should call it's super()
     """
 
     LOGGER_CONFIGS = {}
@@ -37,8 +38,9 @@ class BaseAPICollector:
 
     BASE_URL = ''
 
-    def __init__(self, logger_name):
+    def __init__(self, logger_name, forever=False):
         self.log_worker = self.get_logger(logger_name)
+        self.forever = forever
 
     def get_logger(self, name):
         logging.basicConfig(**self.LOGGER_CONFIGS)
@@ -60,7 +62,8 @@ class BaseAPICollector:
 
         You should write own implementation for this method, if you want, according on actions, you want to perform on
         collected data.
-        This method will run only after all data was collected and before collector's rest time countdown begins
+        This method will run only after all data was collected and, if it process run in infinite loop,
+        before collector's rest time countdown begins
         """
         pass
 
@@ -87,25 +90,32 @@ class BaseAPICollector:
 
     def _create_tasks(self):
         """ Create tasks for asynchronous request """
-        tasks = None
-        if self.MUTABLE_QUERY_PARAM_VALUES:
+        if self.MUTABLE_QUERY_PARAM_VALUES and self.MUTABLE_QUERY_PARAM_NAME:
             tasks = [asyncio.ensure_future(self._collect_data(value, **self.QUERY_PARAMS)) for
                      value in self.MUTABLE_QUERY_PARAM_VALUES]
-        if not tasks:
-            raise NothingToRequestError("Your worker can't create tasks. Did you override 'ITERABLE_QUERY_PARAM'?")
+        else:
+            raise NotOverwrittenError("Your worker can't create tasks. You should overwrite "
+                                      "'MUTABLE_QUERY_PARAM_NAME' and 'MUTABLE_QUERY_PARAM_VALUES' in your subclass")
         return tasks
 
     async def _scheduler(self):
-        """ This method tie all parts together and run it in infinite loop """
-        self.log_worker.info('Running...\n\n')
+        """ This method tie all parts together """
+        self.log_worker.info('Create tasks...\n')
+        tasks = self._create_tasks()
+        await asyncio.wait(tasks)  # Run 'self._collect_news' for every task and waits until their finish
+        self.process_data()  # Do nothing if subclasses don't override this
+        self.log_worker.info(f'Loop is finished\n{("-" * 30)}')
+        self.log_worker.info(f'Next loop starts after {self.WORKER_REST_TIME} seconds\n{("-" * 30)}')
+
+    async def _run_forever(self):
+        self.log_worker.info('Running forever...\n\n')
         while True:
-            self.log_worker.info('Create tasks...\n')
-            tasks = self._create_tasks()
-            await asyncio.wait(tasks)  # Run 'self._collect_news' for every task and waits until their finish
-            self.process_data()  # Do nothing if subclasses don't override this
-            self.log_worker.info(f'Loop is finished\n{("-" * 30)}')
-            self.log_worker.info(f'Next loop starts after {self.WORKER_REST_TIME} seconds\n{("-" * 30)}')
+            await self._scheduler()
             await asyncio.sleep(self.WORKER_REST_TIME)
+
+    async def _run_once(self):
+        self.log_worker.info('Running once...\n\n')
+        await self._scheduler()
 
     def run(self):
         """ Starts infinite loop """
@@ -113,10 +123,13 @@ class BaseAPICollector:
         asyncio.set_event_loop(asyncio.new_event_loop())
         ioloop = asyncio.get_event_loop()
         try:
-            asyncio.ensure_future(self._scheduler())
-            ioloop.run_forever()
+            if self.forever:
+                asyncio.ensure_future(self._run_forever())
+                ioloop.run_forever()
+            else:
+                ioloop.run_until_complete(self._run_once())
         except KeyboardInterrupt:
             pass
         finally:
             ioloop.close()
-            self.log_worker.info('Worker stopped...')
+            self.log_worker.info('Worker stopped...\n')
