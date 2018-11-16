@@ -105,12 +105,12 @@ class BaseAPICollector:
         await asyncio.wait(tasks)  # Run 'self._collect_news' for every task and waits until their finish
         self.process_data()  # Do nothing if subclasses don't override this
         self.log_worker.info(f'Loop is finished\n{("-" * 30)}')
-        self.log_worker.info(f'Next loop starts after {self.WORKER_REST_TIME} seconds\n{("-" * 30)}')
 
     async def _run_forever(self):
         self.log_worker.info('Running forever...\n\n')
         while True:
             await self._scheduler()
+            self.log_worker.info(f'Next loop starts after {self.WORKER_REST_TIME} seconds\n{("-" * 30)}')
             await asyncio.sleep(self.WORKER_REST_TIME)
 
     async def _run_once(self):
