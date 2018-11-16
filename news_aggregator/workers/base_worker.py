@@ -11,6 +11,10 @@ class NotOverwrittenError(APICollectorErrors):
     pass
 
 
+class BadValueError(APICollectorErrors):
+    pass
+
+
 class BaseAPICollector:
     """
     Implement asynchronous request operations
@@ -24,27 +28,41 @@ class BaseAPICollector:
          - When overriding '__init__' should call it's super()
     """
 
-    LOGGER_CONFIGS = {}
+    LOGGER_CONFIGS = {}  # Should be dict
 
     # Parameter which will have different values
-    MUTABLE_QUERY_PARAM_NAME = ''
-    # Values for parameter above
-    MUTABLE_QUERY_PARAM_VALUES = []
+    MUTABLE_QUERY_PARAM_NAME = ''  # Should be str
+    # Values for parameter above.
+    MUTABLE_QUERY_PARAM_VALUES = []  # Should be iterable, not str
 
     # Other query parameters
-    QUERY_PARAMS = {}
+    QUERY_PARAMS = {}  # Should be dict
 
-    WORKER_REST_TIME = 0
+    WORKER_REST_TIME = 0  # Should be int or float, and >= 0
 
-    BASE_URL = ''
+    BASE_URL = ''  # Should be str
 
     def __init__(self, logger_name, forever=False):
-        self.log_worker = self.get_logger(logger_name)
+        self.log_worker = self._get_logger(logger_name)
         self.forever = forever
 
-    def get_logger(self, name):
+    def _get_logger(self, name):
         logging.basicConfig(**self.LOGGER_CONFIGS)
         return logging.getLogger(name=name)
+
+    def _is_overwritten_values_valid(self):
+        # TODO: Add validators for other values
+        validators = (
+            self._validate_worker_rest_time(),
+        )
+        for result, var_name, message in validators:
+            if not result:
+                raise BadValueError(f'Wrong value for {var_name}! It should be {message}')
+
+    def _validate_worker_rest_time(self):
+        """ Returns: tuple: (bool value, 'variable name, 'what value is should be') """
+        value = self.WORKER_REST_TIME
+        return isinstance(value, (int, float)) and value >= 0, 'WORKER_REST_TIME', 'int or float, and >= 0'
 
     def put(self, value, data):
         """
@@ -119,6 +137,8 @@ class BaseAPICollector:
 
     def run(self):
         """ Starts infinite loop """
+        self.log_worker.info('Validate variables values...')
+        self._is_overwritten_values_valid()
         self.log_worker.info('Prepare event loops...')
         asyncio.set_event_loop(asyncio.new_event_loop())
         ioloop = asyncio.get_event_loop()

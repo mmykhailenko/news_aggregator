@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from django.conf import settings
 from django.utils import timezone
 from .base_worker import BaseAPICollector
 from news_aggregator.models import Category, News, Resource
@@ -29,7 +30,7 @@ class NewsAPIWorker(BaseAPICollector):
     LOGGER_CONFIGS = {
         'filename': 'worker_logs.txt',
         'filemode': 'a',
-        'level': 10,
+        'level': 10 if settings.DEBUG else 20,
         'format': '%(name)s: %(levelname)s: %(asctime)s: %(message)s',
         'datefmt': '%m/%d/%Y %I:%M:%S'
     }
