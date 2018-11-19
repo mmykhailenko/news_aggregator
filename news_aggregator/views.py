@@ -157,9 +157,8 @@ class Register(View):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}!')
-            return redirect('news_aggregator:news_list')
+            messages.success(request, f'Your account created have been created!')
+            return redirect('login')
         return render(request, 'news_aggregator/register.html', {'form': form})
 
 
