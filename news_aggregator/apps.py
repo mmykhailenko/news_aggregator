@@ -1,3 +1,5 @@
+import logging
+
 from django.apps import AppConfig
 from django.db.utils import OperationalError
 
@@ -12,10 +14,21 @@ class NewsAggregatorConfig(AppConfig):
             news = self.get_model('news')
             news.objects.first()
         except OperationalError:
-            pass
+            logging.info('OperationalError exceptions in "news_aggregator/apps" suppressed')
         else:
             if not self.is_worker_running:
                 self.is_worker_running = True
-                from .workers.worker import NewsAPIWorker
 
-                NewsAPIWorker('News_API_Worker').run()
+                from time import sleep
+                from .workers.collectors.news_api_collector import NewsAPICollector
+                from .workers.serializers.news_api_serializer import NewsAPISerializer
+
+                news_api_collector = NewsAPICollector('news_api_collector')
+                news_api_serializer = NewsAPISerializer('news_api_serializer')
+
+                while True:
+                    news_api_collector.collect()
+                    news_api_serializer.serialize(news_api_collector.news_storage,
+                                                  country=news_api_collector.QUERY_PARAMS['country'],
+                                                  lang=news_api_collector.QUERY_PARAMS['language'])
+                    sleep(15)
