@@ -8,7 +8,11 @@
 </head>
 
 <body>
-
+    {% for message in messages %}
+        <div>
+            {{ message }}
+        </div>
+    {% endfor %}
     {% block content %}{% endblock %}
 
 </body>
