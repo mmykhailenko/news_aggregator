@@ -12,9 +12,6 @@ class WorkerLogger:
         'datefmt': '%m/%d/%Y %I:%M:%S'
     }
 
-    def __init__(self, logger_name):
-        self.logger = self._get_logger(logger_name)
-
-    def _get_logger(self, name):
+    def get_logger(self, name):
         logging.basicConfig(**self.LOGGER_CONFIGS)
         return logging.getLogger(name=name)

@@ -1,8 +1,8 @@
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from news_aggregator.workers.worker_logger import WorkerLogger
 
 
-class BaseAPISerializer(WorkerLogger, metaclass=ABCMeta):
+class BaseAPISerializer:
 
     @abstractmethod
     def get(self, storage):
@@ -14,6 +14,9 @@ class BaseAPISerializer(WorkerLogger, metaclass=ABCMeta):
         :param storage: Place where you store collected data
         :return: Data that you get from storage
         """
+
+    def __init__(self):
+        self.logger = WorkerLogger().get_logger('news_api_serializer')
 
     @abstractmethod
     def process_data(self, data, **kwargs):

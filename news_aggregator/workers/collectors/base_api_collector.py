@@ -1,20 +1,20 @@
 import requests
 
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from news_aggregator.workers.worker_logger import WorkerLogger
 from .api_collector_exceptions import CollectorValueError, VariableNotDefinedError
 
 
-class BaseAPICollector(WorkerLogger, metaclass=ABCMeta):
+class BaseAPICollector:
     """
-    Implement asynchronous request operations
+    Implement API request operations
 
     subclasses TO DO's:
          - Write own implementation for interactions with containers: queue/deque/list/dict/whatever. For this they
          should create container instance on class or object level and override 'put' method.
-         - Subclasses should call method 'run' to work
+         - Subclasses should call method 'collect' to work
          - When overriding '__init__' should call it's super()
 
          - Difine following variables:
@@ -30,6 +30,8 @@ class BaseAPICollector(WorkerLogger, metaclass=ABCMeta):
 
             BASE_URL ---  # Should be str
     """
+    def __init__(self):
+        self.logger = WorkerLogger().get_logger('news_api_collector')
 
     def _is_variables_created(self):
         try:
