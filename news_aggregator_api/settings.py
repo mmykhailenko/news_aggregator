@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +25,7 @@ SECRET_KEY = '%!d%$(o%dr+g3v8d*g%9f2tmm%t&&jdsd0suk#+r=0vjf2%264'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,11 +77,11 @@ WSGI_APPLICATION = 'news_aggregator_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'news_db',
-        'USER': 'test',
-        'PASSWORD': 'test',
-        'HOST': 'db',
-        'PORT': 5432,
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
@@ -125,6 +124,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'news_aggregator:news_list'
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
