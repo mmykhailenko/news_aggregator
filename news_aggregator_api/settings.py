@@ -76,12 +76,8 @@ WSGI_APPLICATION = 'news_aggregator_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'news_db',
-        'USER': 'test',
-        'PASSWORD': 'test',
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
