@@ -1,9 +1,11 @@
 from datetime import date
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.contrib import messages
 from django.views.generic import ListView, DetailView, View
 from news_aggregator.workers.NewsApiWorker import NewsApiWorker
 from .models import Category, Resource, News
+from .forms import UserRegisterForm
 
 
 class ResourceListView(ListView):
@@ -143,6 +145,21 @@ class NewsByFilterListView(NewsQueries, View):
 
         context = {'news': News.objects.filter(**{query: value})}
         return render(request, 'news_aggregator/news_filter_list.html', context=context)
+
+
+class Register(View):
+
+    def get(self, request):
+        form = UserRegisterForm()
+        return render(request, 'news_aggregator/register.html', {'form': form})
+
+    def post(self, request):
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Your account created have been created!')
+            return redirect('login')
+        return render(request, 'news_aggregator/register.html', {'form': form})
 
 
 def documentation_view(request):

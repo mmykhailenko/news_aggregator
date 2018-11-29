@@ -36,14 +36,3 @@ class News(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class User(models.Model):
-
-    first_name = models.CharField(max_length=40)
-    last_name = models.CharField(max_length=40)
-    email = models.EmailField()
-    password = models.CharField(max_length=40)
-
-    def __str__(self):
-        return "{} {}".format(self.first_name,  self.last_name)

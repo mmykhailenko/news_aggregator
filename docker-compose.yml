@@ -16,7 +16,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   adminer:
       image: adminer
       restart: always
@@ -24,6 +23,8 @@ services:
         - 8080:8080
   web:
     build: ./
+    env_file:
+      - ./.env_local
     command: bash -c "python3 manage.py makemigrations && python manage.py migrate && python manage.py runserver 0:8000"
     ports:
       - 8000:8000
