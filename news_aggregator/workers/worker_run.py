@@ -1,6 +1,6 @@
 from time import sleep
-from .collectors.news_api_collector import NewsAPICollector
-from .serializers.news_api_serializer import NewsAPISerializer
+from .collectors import NewsAPICollector
+from .serializers import NewsAPISerializer
 
 
 def news_api_worker_run():
