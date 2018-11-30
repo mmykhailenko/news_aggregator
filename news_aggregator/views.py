@@ -1,9 +1,8 @@
 from datetime import date
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, View
-from news_aggregator.workers.NewsApiWorker import NewsApiWorker
 from .models import Category, Resource, News
 from .forms import UserRegisterForm
 
@@ -38,15 +37,6 @@ class NewsListView(ListView):
 class NewsDetailView(DetailView):
     model = News
     template_name = 'news_aggregator/news_single.html'
-
-
-class NewsCreator(View):
-
-    def get(self, request, *args, **kwargs):
-        news_worker = NewsApiWorker(api_type="top-headlines", query="White House", country="us", category="politics", language="en", time_step=10)
-        news_worker.get_news()
-
-        return HttpResponse("DONE")
 
 
 class NewsQueries:
