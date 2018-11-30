@@ -21,6 +21,7 @@ class CreateBaseAPICollector:
             BASE_URL = self.base_url
 
             def put(self, value, data):
+                """ It's abstract method, should be overwritten"""
                 pass
 
         return CustomBaseAPICollector()

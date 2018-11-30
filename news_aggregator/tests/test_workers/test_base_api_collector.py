@@ -53,18 +53,18 @@ class TestBaseAPICollector(TestCase):
 
     # ------------ Test '_is_mutable_query_param_values_valid' method --------------
 
-    def test_valid_list_mutable_query_param_values_valid(self):
+    def test_valid_list_mutable_query_param_values(self):
         with CreateBaseAPICollector(mqpv=['test', 'test']) as collector:
             self.assertIsNone(collector._is_mutable_query_param_values_valid())
 
-    def test_empty_list_mutable_query_param_values_valid(self):
+    def test_empty_list_mutable_query_param_values(self):
         with CreateBaseAPICollector(mqpv=[]) as collector:
             self.assertRaises(CollectorValueError, collector._is_mutable_query_param_values_valid)
 
-    def test_valid_tuple_mutable_query_param_values_valid(self):
+    def test_valid_tuple_mutable_query_param_values(self):
         with CreateBaseAPICollector(mqpv=('test', 'test')) as collector:
             self.assertIsNone(collector._is_mutable_query_param_values_valid())
 
-    def test_empty_tuple_mutable_query_param_values_valid(self):
+    def test_empty_tuple_mutable_query_param_values(self):
         with CreateBaseAPICollector(mqpv=()) as collector:
             self.assertRaises(CollectorValueError, collector._is_mutable_query_param_values_valid)

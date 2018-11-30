@@ -16,11 +16,10 @@ class TestNewsAPISerializer(TestCase):
         del self.collector
 
     def test_is_get_extract_data(self):
+        """ Test is data extracted from the collector's storage """
         self.collector.news_storage.append('data')
         self.serializer.get(self.collector.news_storage)
         self.assertFalse(self.collector.news_storage, "data wasn't extracted")
-
-        self.assertFalse(self.serializer._have_required_fields('', '', None))
 
     # ------------ Test '_have_required_fields' method --------------
 
@@ -37,12 +36,14 @@ class TestNewsAPISerializer(TestCase):
         name = 'Django'
         country = 'us'
         self.serializer._serialize_source(url, name, country)
+
         source = Resource.objects.get(pk=url)
         self.assertTrue(source, "Source wasn't created")
 
     def test_is_category_created(self):
         name = 'Django'
         self.serializer._serialize_category(name)
+
         category = Category.objects.get(name=name)
         self.assertTrue(category, "Category wasn't created")
 
@@ -55,6 +56,7 @@ class TestNewsAPISerializer(TestCase):
         )
         category = Category.objects.create(name='django2')
 
+        # Create news article
         self.serializer._serialize_news(
             title='Interesting topic',
             pub_date=timezone.now(),
