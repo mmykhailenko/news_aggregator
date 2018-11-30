@@ -22,13 +22,13 @@ class NewsAPISerializer(BaseAPISerializer):
         self.logger.debug(f'Processing finished for: "{category}"\n')
 
     def _extract_required_fields(self, article):
-        title = article['title']
-        content = article['content'] or article['description']
-        pub_date = article['publishedAt'] or timezone.now()
+        title = article.get('title')
+        content = article.get('content') or article.get('description')
+        pub_date = article.get('publishedAt') or timezone.now()
 
-        parsed_url = urlparse(article['url'])
+        parsed_url = urlparse(article.get('url'))
         source_url = "{uri.scheme}://{uri.netloc}/".format(uri=parsed_url)
-        source_name = article['source']['name'] or "{uri.netloc}".format(uri=parsed_url)
+        source_name = article.get('source').get('name') or "{uri.netloc}".format(uri=parsed_url)
         return title, content, source_url, source_name, pub_date
 
     def _have_required_fields(self, *fields):

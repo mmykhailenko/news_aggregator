@@ -1,8 +1,8 @@
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from news_aggregator.workers.worker_logger import WorkerLogger
 
 
-class BaseAPISerializer:
+class BaseAPISerializer(metaclass=ABCMeta):
     """
     Implement interactions with defined collector's class data storage for chosen API.
 

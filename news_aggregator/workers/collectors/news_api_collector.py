@@ -21,10 +21,12 @@ class NewsAPICollector(BaseAPICollector):
         'page_size': 20,
     }
 
-    news_storage = []
+    def __init__(self):
+        super().__init__()
+        self.news_storage = []
 
     def put(self, value, data):
         """ Mark collected json data with name of category and put in the storage """
-        data = {value: data['articles']}
+        data = {value: data.get('articles')}
         self.news_storage.append(data)
         self.logger.debug(f'Json response for {value} added in storage\n')

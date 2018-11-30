@@ -1,13 +1,13 @@
 import requests
 
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from news_aggregator.workers.worker_logger import WorkerLogger
 from .api_collector_exceptions import CollectorValueError
 
 
-class BaseAPICollector:
+class BaseAPICollector(metaclass=ABCMeta):
     """
     Implement API request operations
 
@@ -56,10 +56,7 @@ class BaseAPICollector:
             query_params = {self.MUTABLE_QUERY_PARAM_NAME: value, **self.QUERY_PARAMS}
             self.logger.info(f'Sending request for {value}...')
 
-            try:
-                resp = requests.get(self.BASE_URL, params=query_params)
-            except Exception as ex:
-                self.logger.error(f'Request problem: {ex}')
+            resp = requests.get(self.BASE_URL, params=query_params)
 
             if resp.status_code == 200:
                 self.logger.debug(f'Request status for {value} is {resp.status_code}')

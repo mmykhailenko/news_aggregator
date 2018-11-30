@@ -1,6 +1,6 @@
 from datetime import date
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, View
 from .models import Category, Resource, News
