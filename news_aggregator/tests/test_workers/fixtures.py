@@ -1,18 +1,29 @@
-import pytest
-
-from news_aggregator.workers.collectors import BaseAPICollector, NewsAPICollector
+from news_aggregator.workers.collectors import BaseAPICollector
 
 
-@pytest.fixture(scope='session')
-def invalid_base_api_collector_const():
+class CreateBaseAPICollector:
     """
-        Create class with incorrectly overwritten constant variables
+        Create class with overwritten constant variables in context manager, and delete it in '__exit__'
     """
-    class InvalidBaseAPICollector(BaseAPICollector):
 
-        MUTABLE_QUERY_PARAM_NAME = None
-        MUTABLE_QUERY_PARAM_VALUES = None
-        QUERY_PARAMS = None
-        BASE_URL = None
+    def __init__(self, query_params=None, base_url=None, mqpn=None, mqpv=None):
+        self.query_params = query_params
+        self.base_url = base_url
+        self.mqpn = mqpn
+        self.mqpv = mqpv
 
-    return InvalidBaseAPICollector()
+    def __enter__(self):
+        class CustomBaseAPICollector(BaseAPICollector):
+
+            MUTABLE_QUERY_PARAM_NAME = self.mqpn
+            MUTABLE_QUERY_PARAM_VALUES = self.mqpv
+            QUERY_PARAMS = self.query_params
+            BASE_URL = self.base_url
+
+            def put(self, value, data):
+                pass
+
+        return CustomBaseAPICollector()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        del self
