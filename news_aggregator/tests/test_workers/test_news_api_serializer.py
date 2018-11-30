@@ -11,10 +11,6 @@ class TestNewsAPISerializer(TestCase):
         self.serializer = NewsAPISerializer()
         self.collector = NewsAPICollector()
 
-    def tearDown(self):
-        del self.serializer
-        del self.collector
-
     def test_is_get_extract_data(self):
         """ Test is data extracted from the collector's storage """
         self.collector.news_storage.append('data')

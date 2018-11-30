@@ -7,9 +7,6 @@ class TestNewsAPICollector(TestCase):
     def setUp(self):
         self.collector = NewsAPICollector()
 
-    def tearDown(self):
-        del self.collector
-
     def test_is_constant_vars_valid(self):
         self.assertIsNone(self.collector._checklist())
 
